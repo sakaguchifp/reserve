@@ -69,7 +69,7 @@ amounts = {
 }
 
 for key in isin_codes.keys():
-    with st.sidebar.beta_container():
+    with st.sidebar.container():
         st.write(f'{key}')
         amounts[key] = st.number_input('購入額',0,None,10000,1000,None,key)
 
@@ -132,11 +132,11 @@ def rimawari_month(a, b):
     # 評価額の方が高い場合は
     if sum(c) < V:
         # 正の解を出力する
-        result = list(filter(lambda z: z > 0, b))
+        result = list(filter(lambda z: z > 0, b))[0]
     # 評価額の方が低い場合は
     else:
         # 負の解を出力する
-        result = list(filter(lambda z: z < 0, b))
+        result = list(filter(lambda z: z < 0, b))[-1]
     return result
 
 try:
@@ -188,14 +188,13 @@ try:
 
         c = df_total['投資額'].values
         V = df_total['評価額'].values[-1]
-        
+  
         # Rを計算
-        r = rimawari_month(c, V)[0]
+        r = rimawari_month(c, V)
         R = (1+r)**12-1
         R = np.round(R*100, decimals=2)
-        R1 = str(R)
         st.write(f"""
-        ## 年利は **{R1}%** です。
+        ## 年利は **{R.real}%** です。
         """)
 
         ymin = 0
